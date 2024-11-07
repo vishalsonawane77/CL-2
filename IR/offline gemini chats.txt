@@ -1,0 +1,204 @@
+1)Assignment-2 : 
+PART 1 :https://g.co/gemini/share/d9bd812efc46
+PART 2 :https://g.co/gemini/share/87ac61aeed6e
+
+2)Assignment-3
+
+_____________________________________________________________
+
+The PageRank algorithm is a method originally developed by Larry Page and Sergey Brin, the co-founders of Google, to rank web pages in search engine results. It was designed to measure the "importance" of web pages by analyzing the structure of links between them, based on the assumption that a page linked to by many other pages is likely to be important.
+
+Here’s a breakdown of how it works:
+
+### 1. Basic Concept
+The PageRank algorithm treats the web as a directed graph, where each page is a node, and each hyperlink from one page to another is a directed edge. A page's importance (its PageRank score) is determined not only by the number of incoming links but also by the quality of these links. A link from a highly ranked page counts more than a link from a low-ranked page.
+
+### 2. Key Assumptions
+- **Random Surfer Model:** Imagine a user randomly navigating the web by clicking links. The probability that they land on a particular page is used as a measure of that page’s rank.
+- **Link Voting:** Each page distributes its importance (PageRank score) to the pages it links to. The more outgoing links a page has, the less "weight" each link has.
+
+### 3. PageRank Calculation
+The PageRank of a page \( P \) is calculated iteratively with the following formula:
+
+\[
+PR(P) = \frac{1 - d}{N} + d \sum_{i=1}^{n} \frac{PR(P_i)}{L(P_i)}
+\]
+
+where:
+- \( PR(P) \): PageRank score of page \( P \).
+- \( d \): Damping factor, usually set to 0.85. This accounts for the probability that a user will follow a link versus randomly jumping to any page.
+- \( N \): Total number of pages.
+- \( P_i \): Pages that link to page \( P \).
+- \( L(P_i) \): Number of outgoing links from page \( P_i \).
+
+### Explanation of the Formula
+- **First Term** \(\frac{1 - d}{N}\): Accounts for the probability that the user lands on the page randomly rather than through a link.
+- **Second Term** \(d \sum_{i=1}^{n} \frac{PR(P_i)}{L(P_i)}\): Accumulates PageRank from all pages linking to \( P \), weighted by their own PageRank and the number of links they have. Pages with high PageRank passing through fewer links distribute a stronger influence on linked pages.
+
+### 4. Iterative Calculation
+1. Start with an initial PageRank score for each page (often each page is initialized with a rank of 1).
+2. Update the PageRank scores for all pages using the formula.
+3. Repeat until the values converge, meaning the PageRank scores stabilize and change very little between iterations.
+
+### 5. Damping Factor
+The damping factor \( d \) is crucial for making the algorithm robust. Without it, the model would tend to place too much importance on pages in a “loop” or on a small, well-connected subset of pages. It effectively allows the algorithm to account for real-world user behavior.
+
+### 6. Applications Beyond Web Search
+While PageRank was initially created for ranking websites, its underlying principles are applicable in other areas:
+- **Social Network Analysis:** Ranking influential individuals based on connections.
+- **Recommendation Systems:** Prioritizing items or content that are "linked" through user preferences or behaviors.
+- **Scientific Research:** Ranking research papers by citations from other influential papers.
+
+### Summary
+PageRank is a recursive algorithm that ranks pages based on the link structure of the web, considering both the quantity and quality of incoming links. It has become one of the foundational algorithms in network analysis and has inspired many similar ranking and recommendation techniques in different domains.
+________________________________________________________
+This code calculates the PageRank of nodes in a directed graph using Python's `networkx` library. Here’s a breakdown of each line:
+
+1. **Import Libraries**:
+   ```python
+   import numpy as np
+   import networkx as nx
+   ```
+   - `numpy` is imported as `np`, although it's not used in this particular snippet.
+   - `networkx` is imported as `nx`, which is a library for creating, analyzing, and manipulating graphs and networks.
+
+2. **Create a Directed Graph**:
+   ```python
+   G = nx.DiGraph()
+   ```
+   - `nx.DiGraph()` initializes a directed graph, which means edges have a direction, from one node to another.
+
+3. **Add Edges to the Graph**:
+   ```python
+   edges = [('A', 'B'), ('B', 'C'), ('C', 'A'), ('B', 'D')]
+   G.add_edges_from(edges)
+   ```
+   - A list of directed edges (`edges`) is created, where each tuple represents a directed edge from one node to another.
+   - `G.add_edges_from(edges)` adds these edges to the graph `G`.
+
+4. **Compute PageRank**:
+   ```python
+   pagerank = nx.pagerank(G)
+   ```
+   - `nx.pagerank(G)` computes the PageRank values for each node in the graph `G`.
+   - PageRank is a way of measuring the importance of each node within a graph, based on the structure of the graph and the connections between nodes.
+
+5. **Print the PageRank Values**:
+   ```python
+   for node, rank in pagerank.items():
+       print(f"Node {node}: {rank:.4f}")
+   ```
+   - This loop iterates over each node and its associated PageRank score in the `pagerank` dictionary.
+   - It prints the node’s label and its PageRank value formatted to four decimal places.
+
+### Output Explanation
+The printed output shows the PageRank values for each node (`A`, `B`, `C`, `D`). A higher PageRank value indicates a higher importance within the graph structure.
+
+_________________________________________________________________________________________________
+Agglomerative Clustering is a type of hierarchical clustering algorithm, often referred to as a "bottom-up" approach. In this method, each data point starts as its own cluster, and clusters are iteratively merged based on their similarity until a stopping criterion is met, which usually results in a single cluster or a desired number of clusters.
+
+Here’s a breakdown of how it works:
+
+Steps of Agglomerative Clustering
+Start with Individual Clusters: Each data point is considered its own cluster initially, meaning if there are 
+𝑛
+n data points, there will be 
+𝑛
+n clusters.
+
+Compute Distances Between Clusters: Distances between clusters are calculated using a chosen distance metric (e.g., Euclidean, Manhattan). A linkage criterion also needs to be selected to define how the distance between two clusters is measured.
+
+Merge the Closest Clusters: The two clusters that are closest based on the linkage criterion are merged to form a new cluster.
+
+Update the Distance Matrix: After merging, the distances are recalculated between the newly formed cluster and the remaining clusters.
+
+Repeat Steps 3–4: Steps 3 and 4 are repeated until only the desired number of clusters is left or all data points are combined into a single cluster.
+
+Linkage Criteria
+The linkage criterion determines how the distance between two clusters is computed. Common linkage criteria include:
+
+Single Linkage: Uses the minimum distance between points in the two clusters.
+Complete Linkage: Uses the maximum distance between points in the two clusters.
+Average Linkage: Uses the average distance between points in the two clusters.
+Ward’s Linkage: Minimizes the variance within clusters, making it particularly useful for producing compact clusters.
+Dendrogram
+Agglomerative clustering can be visualized with a dendrogram, a tree-like diagram that shows how individual points are merged over successive iterations. The height at which two clusters are joined represents the distance between them.
+
+Example Application
+Suppose you have a dataset of customers, and you want to group them based on purchasing behavior. Agglomerative clustering can help identify clusters of similar customers by iteratively merging them based on their similarity (e.g., based on purchase history or demographics).
+
+Pros and Cons of Agglomerative Clustering
+Pros:
+
+Does not require the number of clusters to be specified in advance (although it can be set as a stopping criterion).
+Suitable for hierarchical, tree-like relationships.
+Cons:
+
+Computationally expensive for large datasets.
+Sensitive to the choice of distance metric and linkage criterion.
+Practical Usage
+Agglomerative clustering is implemented in popular libraries like scikit-learn (in Python) with options for different linkage methods and distance metrics. This makes it accessible for exploratory data analysis, especially for small to medium datasets where hierarchical relationships are useful.
+
+---------------------------------------------------------------------------------------------------------------------------
+**Support Vector Machine (SVM)** is a supervised learning algorithm primarily used for classification, although it can also be used for regression. SVM works by finding the optimal hyperplane that best separates the data points of different classes in feature space. This hyperplane maximizes the **margin**—the distance between the hyperplane and the nearest data points from each class, called **support vectors**.
+
+### How SVM Works
+1. **Linearly Separable Case**:
+   - When classes are linearly separable, SVM aims to find the straight line (in 2D) or hyperplane (in higher dimensions) that divides the classes with the widest possible margin.
+   - SVM uses support vectors, which are the data points closest to the hyperplane, to define this margin. Only these support vectors impact the hyperplane’s position, making SVM less sensitive to other data points, effectively reducing overfitting.
+
+2. **Non-Linearly Separable Case**:
+   - When classes are not linearly separable, SVM applies a **kernel trick** to transform the data into a higher-dimensional space where a linear separation is possible. The algorithm then finds a hyperplane in this higher-dimensional space that maximally separates the classes.
+  
+---
+
+### SVM Kernels
+Kernels are functions that enable SVM to work efficiently in high-dimensional spaces by implicitly mapping data to a higher dimension without explicitly computing the transformation. This is known as the **kernel trick**. Different kernels are suited to different types of data structures, and choosing the right kernel can significantly improve the model's performance.
+
+Here are the main types of kernels:
+
+1. **Linear Kernel**
+   - Formula: \( K(x, x') = x \cdot x' \)
+   - The linear kernel is simply the dot product of two vectors. It is often used when the data is linearly separable or can be separated with a linear boundary.
+   - It’s computationally efficient and works well for high-dimensional data where a linear decision boundary is sufficient.
+   - **Example Application**: Text classification, where the data has high dimensions and is linearly separable.
+
+2. **Polynomial Kernel**
+   - Formula: \( K(x, x') = (x \cdot x' + c)^d \)
+   - The polynomial kernel represents the similarity between vectors raised to a specified degree \( d \), allowing it to create curved decision boundaries.
+   - The parameter \( c \) controls the flexibility, while \( d \) determines the degree of the polynomial.
+   - **Example Application**: Image processing, where the relationships between features may be non-linear but still exhibit polynomial characteristics.
+
+3. **Radial Basis Function (RBF) Kernel / Gaussian Kernel**
+   - Formula: \( K(x, x') = \exp\left(-\gamma ||x - x'||^2\right) \)
+   - The RBF kernel measures similarity based on the distance between points. Here, \( \gamma \) is a parameter that determines the width of the Gaussian and controls the influence range of a single data point.
+   - The RBF kernel can handle more complex data structures and is the most commonly used kernel for SVM. It maps data into a potentially infinite-dimensional space.
+   - **Example Application**: Non-linearly separable data with complex, curved boundaries, such as in gene classification or other biological data.
+
+4. **Sigmoid Kernel**
+   - Formula: \( K(x, x') = \tanh(\alpha x \cdot x' + c) \)
+   - The sigmoid kernel functions similarly to an artificial neuron in a neural network, with \( \alpha \) controlling the slope and \( c \) as the intercept.
+   - It’s sometimes used in binary classification, although it is less common than RBF or polynomial kernels.
+   - **Example Application**: Used in scenarios where a neural network-like transformation may benefit the data, though it can lead to unbounded outputs and instability issues.
+
+---
+
+### Choosing the Right Kernel
+Choosing a kernel depends on:
+- **Data Structure**: Linear kernel is best for linearly separable data; RBF or polynomial kernels are better for complex, non-linear structures.
+- **Computational Efficiency**: The linear kernel is faster and suitable for high-dimensional, sparse data.
+- **Overfitting Risk**: Polynomial and RBF kernels are more flexible and can fit complex data, but they may overfit if parameters are not chosen carefully.
+
+### Pros and Cons of SVM
+**Pros**:
+- Effective in high-dimensional spaces and when the number of dimensions is greater than the number of samples.
+- Robust to overfitting, especially with the use of regularization parameters.
+- Only support vectors influence the decision boundary, making SVM memory efficient.
+
+**Cons**:
+- Not well-suited for large datasets due to high computational cost.
+- Less effective on noisy datasets where classes overlap significantly.
+- Kernel selection and parameter tuning can be challenging and often require experimentation.
+
+### Summary
+SVM is powerful for classification tasks, especially with complex data that requires non-linear boundaries. Kernels like linear, polynomial, RBF, and sigmoid enable SVM to adapt to various data types and structures.
