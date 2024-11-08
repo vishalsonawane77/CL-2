@@ -1,0 +1,309 @@
+# Import necessary libraries
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
+
+# Load the dataset (Assume it's available in the same directory as 'diamonds.csv')
+data = pd.read_csv('diamonds.csv')
+
+# Display the first few rows of the dataset
+print("First 5 rows of the dataset:")
+print(data.head())
+
+# Step 1: Data Cleaning
+# Check for missing values
+print("\nMissing values in each column:")
+print(data.isnull().sum())
+
+# Remove rows with missing values if any
+data = data.dropna()
+
+# Step 2: Basic Data Exploration
+print("\nBasic statistical summary:")
+print(data.describe())
+
+print("\nColumn types and non-null counts:")
+print(data.info())
+
+# Step 3: Exploratory Data Analysis (EDA)
+# Plot the distribution of diamond prices
+plt.figure(figsize=(10, 6))
+sns.histplot(data['price'], bins=30, kde=True)
+plt.title('Distribution of Diamond Prices')
+plt.xlabel('Price')
+plt.ylabel('Frequency')
+plt.show()
+
+# Check the relationship between carat and price
+plt.figure(figsize=(10, 6))
+sns.scatterplot(x='carat', y='price', data=data)
+plt.title('Carat vs. Price')
+plt.xlabel('Carat')
+plt.ylabel('Price')
+plt.show()
+
+# Step 4: Feature Engineering
+# Log-transform price to reduce skewness
+data['log_price'] = np.log(data['price'] + 1)
+
+# Encode categorical features
+data = pd.get_dummies(data, columns=['cut', 'color', 'clarity'], drop_first=True)
+
+# Step 5: Modeling (Predicting Price Based on Features)
+# Define features and target variable
+X = data.drop(['price', 'log_price'], axis=1)  # Features
+y = data['log_price']  # Target (log-transformed price)
+
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Initialize a Linear Regression model
+model = LinearRegression()
+
+# Fit the model on training data
+model.fit(X_train, y_train)
+
+# Predict on test data
+y_pred = model.predict(X_test)
+
+# Evaluate the model
+mse = mean_squared_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
+
+print("\nModel Performance on Test Data:")
+print(f"Mean Squared Error (MSE): {mse}")
+print(f"R-squared (R2 Score): {r2}")
+
+# Step 6: Plotting Predicted vs Actual Prices
+plt.figure(figsize=(10, 6))
+plt.scatter(y_test, y_pred, alpha=0.6)
+plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], color='red', linewidth=2)
+plt.title("Predicted vs Actual Log-Transformed Prices")
+plt.xlabel("Actual Log Price")
+plt.ylabel("Predicted Log Price")
+plt.show()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1. Box Plot of Price by Cut Quality
+Box plots help in visualizing the distribution of price across different cut categories, showing medians, quartiles, and any potential outliers.
+
+python
+Copy code
+plt.figure(figsize=(10, 6))
+sns.boxplot(x='cut', y='price', data=data)
+plt.title('Box Plot of Diamond Prices by Cut Quality')
+plt.xlabel('Cut Quality')
+plt.ylabel('Price')
+plt.show()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2. Violin Plot of Carat by Clarity
+A violin plot combines aspects of a box plot and a KDE plot, showing the distribution and density of carat for different clarity levels.
+
+python
+Copy code
+plt.figure(figsize=(12, 6))
+sns.violinplot(x='clarity', y='carat', data=data)
+plt.title('Violin Plot of Carat by Clarity')
+plt.xlabel('Clarity')
+plt.ylabel('Carat')
+plt.show()
+
+
+
+
+
+
+
+
+3. Correlation Heatmap
+A correlation heatmap can help to identify relationships between numeric features in the dataset, such as carat, depth, table, and price.
+
+python
+Copy code
+plt.figure(figsize=(10, 8))
+correlation_matrix = data.corr()
+sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', linewidths=0.5)
+plt.title('Correlation Heatmap')
+plt.show()
+
+
+
+
+
+
+
+
+
+
+
+4. Pair Plot
+A pair plot provides scatter plots and histograms for each pair of numeric features, which can reveal potential relationships between price, carat, and other numerical features.
+
+python
+Copy code
+sns.pairplot(data[['price', 'carat', 'depth', 'table']])
+plt.suptitle('Pair Plot of Diamond Features', y=1.02)
+plt.show()
+
+
+
+
+
+
+
+
+
+
+
+5. Count Plot for Categorical Features
+Count plots show the count of diamonds within each category, which can help in understanding the distribution of cut, color, and clarity.
+
+python
+Copy code
+plt.figure(figsize=(15, 4))
+
+# Cut
+plt.subplot(1, 3, 1)
+sns.countplot(x='cut', data=data)
+plt.title('Count of Diamonds by Cut')
+
+# Color
+plt.subplot(1, 3, 2)
+sns.countplot(x='color', data=data)
+plt.title('Count of Diamonds by Color')
+
+# Clarity
+plt.subplot(1, 3, 3)
+sns.countplot(x='clarity', data=data)
+plt.title('Count of Diamonds by Clarity')
+
+plt.tight_layout()
+plt.show()
+
+
+
+
+
+
+
+
+
+
+6. Scatter Plot with Regression Line: Carat vs. Price
+A scatter plot with a regression line can show the trend between carat and price, with hue set to cut to color-code each point by diamond cut.
+
+python
+Copy code
+plt.figure(figsize=(10, 6))
+sns.regplot(x='carat', y='price', data=data, scatter_kws={'alpha':0.5}, line_kws={'color':'red'})
+plt.title('Carat vs Price with Regression Line')
+plt.xlabel('Carat')
+plt.ylabel('Price')
+plt.show()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+7. Facet Grid Plot for Price by Cut and Color
+This plot creates multiple subplots, allowing you to see the distribution of price for each combination of cut and color.
+
+python
+Copy code
+g = sns.FacetGrid(data, col='cut', row='color', height=2.5, aspect=1.2)
+g.map(sns.histplot, 'price', kde=True)
+g.set_axis_labels('Price', 'Frequency')
+g.add_legend()
+plt.subplots_adjust(top=0.9)
+g.fig.suptitle('Distribution of Prices by Cut and Color')
+plt.show()
+
+
+
+
+
+
+
+
+
+
+
+
+8. Box Plot of Price by Carat Categories
+To get insights into how price varies with carat, you can create carat categories and plot a box plot.
+
+python
+Copy code
+# Create carat categories
+data['carat_category'] = pd.cut(data['carat'], bins=[0, 0.5, 1.0, 1.5, 2.0, data['carat'].max()], 
+                                labels=['<0.5', '0.5-1.0', '1.0-1.5', '1.5-2.0', '>2.0'])
+
+plt.figure(figsize=(10, 6))
+sns.boxplot(x='carat_category', y='price', data=data)
+plt.title('Price by Carat Categories')
+plt.xlabel('Carat Category')
+plt.ylabel('Price')
+plt.show()
+
+
+
+
+
+
+
+
+
+
+
+9. Heatmap of Average Price by Cut and Color
+A heatmap showing average prices for each combination of cut and color gives insight into how these categories impact diamond pricing.
+
+python
+Copy code
+pivot_table = data.pivot_table(values='price', index='cut', columns='color', aggfunc='mean')
+plt.figure(figsize=(10, 6))
+sns.heatmap(pivot_table, annot=True, fmt=".0f", cmap='YlGnBu')
+plt.title('Average Price by Cut and Color')
+plt.xlabel('Color')
+plt.ylabel('Cut')
+plt.show()
